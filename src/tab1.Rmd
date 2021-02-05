@@ -1,0 +1,181 @@
+```{r tab1, cache=cacheon}
+
+tab1_overall <- print(
+  CreateTableOne(
+    vars = tabvars,
+    strata = c("shf_ef_cat"),
+    data = pdata %>% filter(casecontrol == "Case")
+  ),
+  smd = FALSE,
+  missing = TRUE,
+  printToggle = FALSE,
+  nonnormal = tabvars,
+  test = TRUE,
+  catDigits = 1,
+  contDigits = 1,
+  explain = FALSE,
+  noSpaces = TRUE
+)
+
+tab1_overall <- data.frame(tab1_overall) %>%
+  rownames_to_column(var = "var") %>%
+  select(var, Missing, p)
+
+
+tab1_ref <- print(
+  CreateTableOne(
+    vars = tabvars,
+    strata = c("casecontrol"),
+    data = pdata %>% filter(shf_ef_cat == "HFrEF")
+  ),
+  smd = TRUE,
+  missing = FALSE,
+  printToggle = FALSE,
+  nonnormal = tabvars,
+  test = TRUE,
+  catDigits = 1,
+  contDigits = 1,
+  explain = FALSE,
+  noSpaces = TRUE
+)
+tab1_ref <- data.frame(tab1_ref) %>%
+  rownames_to_column(var = "var") %>%
+  select(var, Case:p, SMD)
+
+tab1_mref <- print(
+  CreateTableOne(
+    vars = tabvars,
+    strata = c("casecontrol"),
+    data = pdata %>% filter(shf_ef_cat == "HFmrEF")
+  ),
+  smd = TRUE,
+  missing = FALSE,
+  printToggle = FALSE,
+  nonnormal = tabvars,
+  test = TRUE,
+  catDigits = 1,
+  contDigits = 1,
+  explain = FALSE,
+  noSpaces = TRUE
+)
+tab1_mref <- data.frame(tab1_mref) %>%
+  rownames_to_column(var = "var") %>%
+  select(var, Case:p, SMD)
+
+tab1_pef <- print(
+  CreateTableOne(
+    vars = tabvars,
+    strata = c("casecontrol"),
+    data = pdata %>% filter(shf_ef_cat == "HFpEF")
+  ),
+  smd = TRUE,
+  missing = FALSE,
+  printToggle = FALSE,
+  nonnormal = tabvars,
+  test = TRUE,
+  catDigits = 1,
+  contDigits = 1,
+  explain = FALSE,
+  noSpaces = TRUE
+)
+tab1_pef <- data.frame(tab1_pef) %>%
+  rownames_to_column(var = "var") %>%
+  select(var, Case:p, SMD)
+
+tab1 <- Reduce(
+  function(...) {
+    full_join(...,
+      by = "var"
+    )
+  },
+  list(tab1_overall, tab1_ref, tab1_mref, tab1_pef)
+)
+
+tab1 <- tab1 %>%
+  # remove NA
+  mutate(across(everything(), str_replace_all, fixed("NA [NA, NA]"), "-")) %>%
+  mutate(across(everything(), str_replace_all, fixed("0 (NaN)"), "-")) %>%
+  mutate(across(everything(), str_replace_all, fixed("NA"), "")) %>%
+  mutate(across(everything(), str_replace_all, fixed("NaN"), "")) %>%
+  # remove = Yes
+  mutate(across(everything(), str_replace_all, fixed(" = Yes"), "")) %>%
+  mutate(
+    var_tmp = str_split(var, " = ", simplify = TRUE)[, 1],
+    val_tmp = str_split(var, " = ", simplify = TRUE)[, 2]
+  )
+
+tab1 <- left_join(tab1,
+  meta.variables.Sheet.1 %>%
+    select(variable, label, unit),
+  by = c("var_tmp" = "variable")
+) %>%
+  mutate(
+    Variable = coalesce(label, var_tmp),
+    Variable = if_else(!is.na(unit),
+      paste0(Variable, " (", unit, ")"),
+      Variable
+    ),
+    Variable = if_else(val_tmp != "",
+      paste0(Variable, " ", val_tmp),
+      Variable
+    )
+  )
+
+write.xlsx(tab1 %>%
+  select(Variable, Missing:SMD),
+paste0("./output/tabs/tab1_", Sys.Date(), ".xlsx"),
+rowNames = FALSE
+)
+
+# footnotes
+tab1 <- tab1 %>%
+  mutate(
+    footnote1 = if_else(str_detect(var, "^shf_"), footnote_marker_symbol(1), ""),
+    footnote2 = if_else(str_detect(var, "^sos_"), footnote_marker_symbol(2), ""),
+    footnote3 = if_else(str_detect(var, "^ddr_"), footnote_marker_symbol(3), ""),
+    footnote4 = if_else(str_detect(var, "^scb_"), footnote_marker_symbol(4), ""),
+    footnote5 = if_else(str_detect(var, "^shf_ntprobnp_cat"), footnote_marker_symbol(5), ""),
+    footnote6 = if_else(str_detect(var, "^scb_dispincome_cat"), footnote_marker_symbol(6), "")
+  ) %>%
+  unite(footnote, starts_with("footnote"), sep = "") %>%
+  mutate(
+    # so no probs
+    Variable = sanitize_text(Variable),
+
+    Variable = paste0(Variable, footnote),
+
+    # space in Latex output (fix this other way?)
+    Variable = sub("  ", ". ", Variable)
+  ) %>%
+  select(Variable, Missing, Case.x:SMD, p.x)
+
+colnames(tab1) <- sanitize_text(c(
+  "Variable", "Missing (%)", rep(c("Case", "Control", "p-value", "SMD"), 3), "p-value EF (cases)"
+))
+
+myHeader <- c(" " = 1, " " = 1, "HFrEF" = 4, "HFmrEF" = 4, "HFpEF" = 4, " " = 1)
+names(myHeader) <- c(" ", " ", "HFrEF", "HFmrEF", "HFpEF", " ")
+
+footnote(
+  mykable(tab1,
+    fontsize = 3,
+    caption = "Baseline characteristics",
+    longtable = TRUE,
+    escape = FALSE
+  ) %>%
+    landscape() %>%
+    add_header_above(myHeader),
+  general = c(
+    "Categorical variables are presented with n (%) and tested with chi-square test and continuous variables with median [q1-q3] and tested with Kruskal-Wallis test.",
+    "Missing (%) is for cases only"
+  ),
+  symbol = c(
+    "Source: SwedeHF",
+    "Source: NPR",
+    "Source: DDR",
+    "Source: SCB",
+    "Medium within EF",
+    "Medium within index year"
+  )
+)
+```

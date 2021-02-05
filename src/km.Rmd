@@ -1,0 +1,98 @@
+```{r km, cache=cacheon}
+
+kmfunc <- function(time, event, eventname, yposplus = rep(0, 6)) {
+  fit <- survfit(formula(paste0("Surv(", time, ",", event, "=='Yes') ~ shf_ef_cat + casecontrol")),
+    data = pdata
+  )
+
+  ## logrank
+  sd <- survdiff(formula(paste0("Surv(", time, ",", event, "=='Yes') ~ shf_ef_cat + casecontrol")),
+    data = pdata
+  )
+  p <- dF(pchisq(sd$chisq, length(sd$n) - 1, lower.tail = FALSE), dig = 3, p = TRUE)
+
+
+  # c(bottom, left, top, right)
+  par(mar = c(5, 4, 4, 7) + 0.1)
+  plots <- plot(fit,
+    fun = "event",
+    ylab = eventname,
+    xscale = 365.25,
+    yscale = 100,
+    col = global_kicols[c(1, 1, 2, 2, 3, 3)],
+    mark.time = FALSE,
+    bty = "n",
+    xlim = c(0, 366 * 10),
+    ylim = c(0, 1),
+    xlab = "Years",
+    axes = F,
+    lwd = 3,
+    lty = c(1, 2, 1, 2, 1, 2),
+    xaxs = "i", yaxs = "i"
+  )
+
+  axis(2, seq(0, 1, 0.25), seq(0, 100, 25), las = 2)
+  axis(1, at = seq(0, 10, 2) * 365, seq(0, 10, 2))
+
+  ypos <- 1 - summary(fit, 365 * 10, extend = TRUE)$surv
+  ytext <- paste0(rep(levels(pdata$shf_ef_cat), each = 2), " ", rep(levels(pdata$casecontrol), 3))
+
+  ylabs <- bind_cols(ypos = ypos + yposplus, ytext = ytext) %>%
+    arrange(ypos)
+
+  mtext(
+    side = 4,
+    line = .2,
+    at = ylabs$ypos,
+    ylabs$ytext,
+    las = 1
+  )
+
+  text(20, 0.9, paste0("Log-rank p ", p), pos = 4)
+}
+```
+
+```{r kmhosp, fig.cap="1-KM First all-cause hospitalization", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_hospany",
+  event = "sos_out_hospany",
+  eventname = "First all-cause hospitalization (%)",
+  yposplus = c(-0.017, 0, 0.007, 0, +0.01, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
+
+```{r kmhfhosp, fig.cap="1-KM First HF hospitalization", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_hosphf",
+  event = "sos_out_hosphf",
+  eventname = "First HF hospitalization (%)",
+  yposplus = c(0.01, -1, 0, -1, +0, -1) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
+
+```{r kmcvhosp, fig.cap="1-KM First CV hospitalization", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_hospcv",
+  event = "sos_out_hospcv",
+  eventname = "First CV hospitalization (%)",
+  yposplus = c(0.0, -0.01, -0.01, -0, +0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
+
+```{r kmnoncvhosp, fig.cap="1-KM First non-CV hospitalization", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_hospnoncv",
+  event = "sos_out_hospnoncv",
+  eventname = "First non-CV hospitalization (%)"
+  # yposplus = c(-0.0, 0, 0, 0) # lowest, middle, highest
+)
+```
+
+```{r kmhfvis, fig.cap="1-KM First out-patient visit", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_visany",
+  event = "sos_out_visany",
+  eventname = "First out-patient visit (%)"
+  # yposplus = c(-0.015, -0.002, 0.003, 0.023) # lowest, middle, highest
+)
+```
