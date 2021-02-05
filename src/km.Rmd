@@ -48,7 +48,7 @@ kmfunc <- function(time, event, eventname, yposplus = rep(0, 6)) {
     las = 1
   )
 
-  text(20, 0.9, paste0("Log-rank p ", p), pos = 4)
+  text(365 * 6.5, 0.15, paste0("Log-rank p ", p), pos = 4)
 }
 ```
 
@@ -84,7 +84,7 @@ kmfunc(
   time = "sos_outtime_hospnoncv",
   event = "sos_out_hospnoncv",
   eventname = "First non-CV hospitalization (%)"
-  # yposplus = c(-0.0, 0, 0, 0) # lowest, middle, highest
+  # yposplus = c(-0.0, 0, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
 
@@ -92,7 +92,7 @@ kmfunc(
 kmfunc(
   time = "sos_outtime_visany",
   event = "sos_out_visany",
-  eventname = "First out-patient visit (%)"
-  # yposplus = c(-0.015, -0.002, 0.003, 0.023) # lowest, middle, highest
+  eventname = "First out-patient visit (%)",
+  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
