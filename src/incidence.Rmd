@@ -107,7 +107,21 @@ emnohosp <- incfunc(
   eventname = "ER visits excluding trailing hospitalisation",
   rep = TRUE
 )
-
+acmort <- incfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_death",
+  eventname = "All-cause mortality (%)"
+)
+cvmort <- incfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_deathcv",
+  eventname = "CV mortality (%)"
+)
+noncvmort <- incfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_deathnoncv",
+  eventname = "Non-CV mortality (%)"
+)
 
 outall <- bind_rows(
   anyhosp,
@@ -121,7 +135,10 @@ outall <- bind_rows(
   anyvis,
   anyvisrep,
   em,
-  emnohosp
+  emnohosp, 
+  acmort,
+  cvmort, 
+  noncvmort
 )
 
 

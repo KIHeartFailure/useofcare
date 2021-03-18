@@ -96,3 +96,30 @@ kmfunc(
   yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
+
+```{r kmacdeath, fig.cap="1-KM All-cause mortality", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_death",
+  eventname = "All-cause mortality (%)",
+  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
+
+```{r kmcvdeath, fig.cap="1-KM CV mortality", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_deathcv",
+  eventname = "CV mortality (%)",
+  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
+
+```{r kmnoncvdeath, fig.cap="1-KM Non-CV mortality", cache=cacheon, dependson="km"}
+kmfunc(
+  time = "sos_outtime_death",
+  event = "sos_out_deathnoncv",
+  eventname = "Non-CV mortality (%)",
+  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+)
+```
