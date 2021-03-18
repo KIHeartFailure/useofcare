@@ -1,7 +1,7 @@
 version: 0.9.3
 data_loading: TRUE
 data_loading_header: TRUE
-data_ignore: patreg.RData, rsdata320.RData, lm.RData, ovsv.RData
+data_ignore: patreg.RData, rsdata322.RData, lm.RData, ovsv.RData
 cache_loading: TRUE
 recursive_loading: TRUE
 munging: FALSE

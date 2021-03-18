@@ -2,7 +2,7 @@
 
 # Inclusion/exclusion criteria --------------------------------------------------------
 
-pdata <- rsdata320 %>%
+pdata <- rsdata322 %>%
   filter(casecontrol == "Case")
 flow <- c("Number of posts (cases) in SHFDB3", nrow(pdata))
 
@@ -33,7 +33,7 @@ colnames(flow) <- c("Criteria", "N")
 pdatacontrols <- inner_join(
   pdata %>%
     select(LopNrcase, shf_ef, shf_indexdtm),
-  rsdata320 %>%
+  rsdata322 %>%
     filter(casecontrol == "Control") %>%
     select(-shf_ef),
   by = c("LopNrcase", "shf_indexdtm")

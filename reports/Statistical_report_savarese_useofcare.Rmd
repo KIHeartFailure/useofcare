@@ -49,7 +49,7 @@ cacheon <- TRUE
 
 ## Data source
 
-SHFDB3, https://kiheartfailure.github.io/shfdb3/, v 3.2.0. 
+SHFDB3, https://kiheartfailure.github.io/shfdb3/, v 3.2.2. 
 
 ## Inclusion/exclusion criteria
 
