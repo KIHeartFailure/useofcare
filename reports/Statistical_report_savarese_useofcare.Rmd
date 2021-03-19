@@ -55,8 +55,9 @@ SHFDB3, https://kiheartfailure.github.io/shfdb3/, v 3.2.2.
 
 ```{r flow}
 mykable(flow, caption = "Flowchart", scale_down = FALSE)
-mykable(ncontrols, caption = "Number of controls / case", scale_down = F)
 ```
+
+For cases with 4-5 available controls 3 controls are sampled at random without replacement. 
 
 First patient in: `r min(pdata$shf_indexdtm)` and last patient in: `r max(pdata$shf_indexdtm)`.  
 

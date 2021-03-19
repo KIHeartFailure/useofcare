@@ -22,8 +22,8 @@ pdata <- pdata %>%
 flow <- rbind(flow, c("First post/patient", nrow(pdata)))
 
 pdata <- pdata %>%
-  filter(ncontrols >= 1)
-flow <- rbind(flow, c(">= 1 control", nrow(pdata)))
+  filter(ncontrols >= 3)
+flow <- rbind(flow, c(">= 3 control", nrow(pdata)))
 
 colnames(flow) <- c("Criteria", "N")
 
@@ -39,12 +39,13 @@ pdatacontrols <- inner_join(
   by = c("LopNrcase", "shf_indexdtm")
 )
 
+set.seed(55734)
+pdatacontrols <- pdatacontrols %>%
+  group_by(LopNrcase) %>%
+  slice_sample(n = 3) %>%
+  ungroup()
+
 pdata <- bind_rows(
   pdata,
   pdatacontrols
 )
-
-ncontrols <- pdata %>%
-  filter(casecontrol == "Case") %>%
-  count(ncontrols)
-names(ncontrols) <- c("No controls", "No cases")
