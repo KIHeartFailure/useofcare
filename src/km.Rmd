@@ -1,6 +1,6 @@
 ```{r km, cache=cacheon}
 
-kmfunc <- function(time, event, eventname, yposplus = rep(0, 6)) {
+kmfunc <- function(time, event, eventname, yposplus = rep(0, 6), lrxy = c(365 * .5, 0.95)) {
   fit <- survfit(formula(paste0("Surv(", time, ",", event, "=='Yes') ~ shf_ef_cat + casecontrol")),
     data = pdata
   )
@@ -48,7 +48,7 @@ kmfunc <- function(time, event, eventname, yposplus = rep(0, 6)) {
     las = 1
   )
 
-  text(365 * 6.5, 0.15, paste0("Log-rank p ", p), pos = 4)
+  text(lrxy[1], lrxy[2], paste0("Log-rank p ", p), pos = 4)
 }
 ```
 
@@ -75,7 +75,7 @@ kmfunc(
   time = "sos_outtime_hospcv",
   event = "sos_out_hospcv",
   eventname = "First CV hospitalization (%)",
-  yposplus = c(0.0, -0.01, -0.01, -0, +0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+  yposplus = c(0.0, -0.01, -0.01, -0, +0, 0.01) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
 
@@ -93,7 +93,8 @@ kmfunc(
   time = "sos_outtime_visany",
   event = "sos_out_visany",
   eventname = "First out-patient visit (%)",
-  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0), # case ref, control ref, case mref, control mref, case peg, control pef
+  lrxy = c(365 * 2.1, 0.93)
 )
 ```
 
@@ -102,7 +103,7 @@ kmfunc(
   time = "sos_outtime_death",
   event = "sos_out_death",
   eventname = "All-cause mortality (%)",
-  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+  yposplus = c(-0.005, 0.0, 0.005, -0.0, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
 
@@ -111,7 +112,7 @@ kmfunc(
   time = "sos_outtime_death",
   event = "sos_out_deathcv",
   eventname = "CV mortality (%)",
-  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+  yposplus = c(0.008, -0.008, -0.008, 0.008, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```
 
@@ -120,6 +121,6 @@ kmfunc(
   time = "sos_outtime_death",
   event = "sos_out_deathnoncv",
   eventname = "Non-CV mortality (%)",
-  yposplus = c(0.052, -0.041, 0.026, -0.021, 0, 0) # case ref, control ref, case mref, control mref, case peg, control pef
+  yposplus = c(-0.01, 0.0, 0.0, 0.0, 0, 0.01) # case ref, control ref, case mref, control mref, case peg, control pef
 )
 ```

@@ -92,7 +92,7 @@ anyvis <- incfunc(
 anyvisrep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_novisany",
-  eventname = "All-casue visit",
+  eventname = "All-cause visit",
   rep = TRUE
 )
 em <- incfunc(
