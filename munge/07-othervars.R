@@ -85,9 +85,22 @@ pdata <- pdata %>%
 
     ddr_rasiarni = if_else(ddr_acei == "Yes" |
       ddr_arni == "Yes" |
-      ddr_arb == "Yes", "Yes", "No")
-  )
+      ddr_arb == "Yes", "Yes", "No"),
 
+    # outcomes
+    # comp risk
+    sos_out_hospany_cr = create_crevent(sos_out_hospany, sos_out_death),
+    sos_out_hosphf_cr = create_crevent(sos_out_hosphf, sos_out_death),
+    sos_out_hospcv_cr = create_crevent(sos_out_hospcv, sos_out_death),
+    sos_out_hospnoncv_cr = create_crevent(sos_out_hospnoncv, sos_out_death),
+    sos_out_visany_cr = create_crevent(sos_out_visany, sos_out_death),
+    sos_out_deathcv_cr = create_crevent(sos_out_deathcv, sos_out_death),
+    sos_out_deathnoncv_cr = create_crevent(sos_out_deathnoncv, sos_out_death),
+
+    ef_casecontrol = factor(paste0(as.numeric(shf_ef_cat) * 2 + as.numeric(casecontrol) - 2),
+      labels = c(paste0(rep(levels(shf_ef_cat), each = 2), " ", levels(casecontrol)))
+    )
+  )
 
 # income
 

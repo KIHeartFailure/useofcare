@@ -48,7 +48,7 @@ anyhosp <- incfunc(
 anyhosprep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_nohospany",
-  eventname = "All-cause hospitalization",
+  eventname = "All-cause hospitalizations",
   rep = TRUE
 )
 hfhosp <- incfunc(
@@ -59,7 +59,7 @@ hfhosp <- incfunc(
 hfhosprep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_nohosphf",
-  eventname = "HF hospitalization",
+  eventname = "HF hospitalizations",
   rep = TRUE
 )
 cvhosp <- incfunc(
@@ -70,7 +70,7 @@ cvhosp <- incfunc(
 cvhosprep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_nohospcv",
-  eventname = "CV hospitalization",
+  eventname = "CV hospitalizations",
   rep = TRUE
 )
 noncvhosp <- incfunc(
@@ -81,7 +81,7 @@ noncvhosp <- incfunc(
 noncvhosprep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_nohospnoncv",
-  eventname = "Non-CV hospitalization",
+  eventname = "Non-CV hospitalizations",
   rep = TRUE
 )
 anyvis <- incfunc(
@@ -92,13 +92,13 @@ anyvis <- incfunc(
 anyvisrep <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_novisany",
-  eventname = "All-cause visit",
+  eventname = "All-cause visits",
   rep = TRUE
 )
 em <- incfunc(
   time = "sos_outtime_death",
   event = "sos_out_noem",
-  eventname = "ER visits/hospitalization",
+  eventname = "ER visits/hospitalizations",
   rep = TRUE
 )
 emnohosp <- incfunc(

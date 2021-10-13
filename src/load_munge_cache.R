@@ -22,3 +22,9 @@ ProjectTemplate::cache("metalm")
 ProjectTemplate::cache("metalos")
 
 ProjectTemplate::cache("pdata")
+
+ProjectTemplate::cache("pdata_rec_hospany")
+ProjectTemplate::cache("pdata_rec_hosphf")
+ProjectTemplate::cache("pdata_rec_hospcv")
+ProjectTemplate::cache("pdata_rec_hospnoncv")
+ProjectTemplate::cache("pdata_rec_visany")

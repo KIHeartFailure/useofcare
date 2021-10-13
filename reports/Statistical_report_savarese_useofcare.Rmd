@@ -116,7 +116,10 @@ Since the cases and controls are loosely matched dependency will not be incorpor
 
 Data were censored at 2019-12-31 or death/emigration, or, for the controls, diagnosis of HF. 
 
-The outcomes are presented with 1 - Kaplan-Meier curves and tested with log-rank test. 
+Time to first events were presented with Kaplan-Meier curves for all-cause mortality 
+and cumulative incidence curves treating death as a competing event for other outcomes. 
+The mean cumulative function (MCF) was used to depict the recurrent events. 
+
 Incidence per 1000 py was calculated with 95% Poisson confidence intervals. 
 
 The median (q1-q3) follow-up is 

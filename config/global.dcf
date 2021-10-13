@@ -10,7 +10,7 @@ logging_level: INFO
 load_libraries: TRUE
 libraries: ggplot2, purrr, dplyr, tidyr, tibble, stringr, stringi, lubridate, 
             kableExtra, tableone, openxlsx, survival, haven, epitools,
-            hfmisc
+            hfmisc, reda, cmprsk
 as_factors: FALSE
 tables_type: tibble
 attach_internal_libraries: FALSE
