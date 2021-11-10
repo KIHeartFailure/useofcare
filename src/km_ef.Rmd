@@ -1,0 +1,126 @@
+```{r kmhospef, fig.cap="First all-cause hospitalization by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_hospany",
+  event = "sos_out_hospany_cr",
+  eventname = "First all-cause hospitalization (%)",
+  yposplus = c(-0.016, 0, 0.006) # ref, mref, pef
+)
+```
+
+```{r kmrechospef, fig.cap="Recurrent all-cause hospitalization by EF", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospany %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  eventname = "Cumulative mean of all-cause hospitalizations"
+)
+```
+
+```{r kmhfhospef, fig.cap="First HF hospitalization by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_hosphf",
+  event = "sos_out_hosphf_cr",
+  eventname = "First HF hospitalization (%)",
+  yposplus = c(0, -0.006, 0) # ref, mref, pef
+)
+```
+
+```{r kmrechfhospef, fig.cap="Recurrent HF hospitalization by EF", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hosphf %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  eventname = "Cumulative mean of HF hospitalizations"
+)
+```
+
+```{r kmcvhospef, fig.cap="First CV hospitalization by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_hospcv",
+  event = "sos_out_hospcv_cr",
+  eventname = "First CV hospitalization (%)",
+  yposplus = c(0.015, -0.015, 0) # ref, mref, pef
+)
+```
+
+```{r kmreccvhospef, fig.cap="Recurrent CV hospitalization by EF", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospcv %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  eventname = "Cumulative mean of CV hospitalizations",
+  yposplus = c(-0.03, 0, 0.03) # ref, mref, pef
+)
+```
+
+```{r kmnoncvhospef, fig.cap="First non-CV hospitalization by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_hospnoncv",
+  event = "sos_out_hospnoncv_cr",
+  eventname = "First non-CV hospitalization (%)"
+)
+```
+
+```{r kmrecnoncvhospef, fig.cap="Recurrent non-CV hospitalization by EF", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospnoncv %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  eventname = "Cumulative mean of non-CV hospitalizations"
+)
+```
+
+```{r kmhfvisef, fig.cap="First out-patient visit by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_visany",
+  event = "sos_out_visany_cr",
+  eventname = "First out-patient visit (%)",
+  yposplus = c(0, 0.025, -0.015) # ref, mref, pef
+)
+```
+
+```{r kmrechfvisef, fig.cap="Recurrent out-patient visit by EF", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_visany %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  eventname = "Cumulative mean of out-patient visits"
+)
+```
+
+```{r kmacdeathef, fig.cap="All-cause mortality by EF", cache=cacheon, dependson="kmfunc"}
+kmfunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_death",
+  event = "sos_out_death",
+  eventname = "All-cause mortality (%)",
+  yposplus = c(-0.01, 0.01, 0) # ref, mref, pef
+)
+```
+
+```{r kmcvdeathef, fig.cap="CV mortality by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_death",
+  event = "sos_out_deathcv_cr",
+  eventname = "CV mortality (%)",
+  yposplus = c(0, 0, 0.011) # ref, mref, pef
+)
+```
+
+```{r kmnoncvdeathef, fig.cap="Non-CV mortality by EF", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata %>% filter(casecontrol == "Case"),
+  xvar = "shf_ef_cat",
+  time = "sos_outtime_death",
+  event = "sos_out_deathnoncv_cr",
+  eventname = "Non-CV mortality (%)"
+)
+```

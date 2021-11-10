@@ -1,6 +1,20 @@
 ```{r los, cache=cacheon}
 
 losfunc <- function(losvar) {
+  loso <- pdata %>%
+    group_by(casecontrol) %>%
+    summarise(
+      los = sum(!!sym(losvar)),
+      .groups = "drop"
+    )
+
+  so <- pdata %>%
+    group_by(casecontrol) %>%
+    summarise(
+      s = sum(sos_outtime_death) / 365.25,
+      .groups = "drop"
+    )
+
   los <- pdata %>%
     group_by(shf_ef_cat, casecontrol) %>%
     summarise(
@@ -15,8 +29,8 @@ losfunc <- function(losvar) {
       .groups = "drop"
     )
 
-  losout <- matrix(c(losvar, dF(los$los / s$s, 1)), nrow = 1)
-  colnames(losout) <- c("Variable", paste0(s$shf_ef_cat, "_", s$casecontrol))
+  losout <- matrix(c(losvar, dF(loso$los / so$s, 1), dF(los$los / s$s, 1)), nrow = 1)
+  colnames(losout) <- c("Variable", so$casecontrol, paste0(s$shf_ef_cat, "_", so$casecontrol))
   return(losout)
 }
 
@@ -30,14 +44,11 @@ write.xlsx(tablos,
   rowNames = FALSE
 )
 
-colnames(tablos) <- sanitize_text(c("Variable", rep(c("Case", "Control"), 3)))
-
-myHeader <- c(" " = 1, "HFrEF" = 2, "HFmrEF" = 2, "HFpEF" = 2)
-names(myHeader) <- c(" ", "HFrEF", "HFmrEF", "HFpEF")
+colnames(tablos) <- sanitize_text(c("Variable", rep(c("Case", "Control"), 4)))
 
 mykable(tablos,
   caption = "Average length of stay in hospital per follow-up year",
   scale_down = FALSE
 ) %>%
-  add_header_above(myHeader)
+  add_header_above(c(" " = 1, "Overall" = 2, "HFrEF" = 2, "HFmrEF" = 2, "HFpEF" = 2))
 ```

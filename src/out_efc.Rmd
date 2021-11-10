@@ -1,0 +1,149 @@
+```{r incidenceefc, cache=cacheon, dependson="incfunc"}
+
+anyhosp <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_hospany",
+  event = "sos_out_hospany",
+  eventname = "First all-cause hospitalization"
+)
+anyhosprep <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_nohospany",
+  eventname = "All-cause hospitalizations",
+  rep = TRUE
+)
+hfhosp <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_hosphf",
+  event = "sos_out_hosphf",
+  eventname = "First HF hospitalization",
+  mod = FALSE
+)
+hfhosprep <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_nohosphf",
+  eventname = "HF hospitalizations",
+  rep = TRUE,
+  mod = FALSE
+)
+cvhosp <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_hospcv",
+  event = "sos_out_hospcv",
+  eventname = "First CV hospitalization"
+)
+cvhosprep <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_nohospcv",
+  eventname = "CV hospitalizations",
+  rep = TRUE
+)
+noncvhosp <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_hospnoncv",
+  event = "sos_out_hospnoncv",
+  eventname = "First non-CV hospitalization"
+)
+noncvhosprep <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_nohospnoncv",
+  eventname = "Non-CV hospitalizations",
+  rep = TRUE
+)
+anyvis <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_visany",
+  event = "sos_out_visany",
+  eventname = "First all-cause visit"
+)
+anyvisrep <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_novisany",
+  eventname = "All-cause visits",
+  rep = TRUE
+)
+em <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_noem",
+  eventname = "ER visits/hospitalizations",
+  rep = TRUE
+)
+emnohosp <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_noemnohosp",
+  eventname = "ER visits excluding trailing hospitalisation",
+  rep = TRUE
+)
+acmort <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_death",
+  eventname = "All-cause mortality (%)"
+)
+cvmort <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_deathcv",
+  eventname = "CV mortality (%)"
+)
+noncvmort <- incfunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_deathnoncv",
+  eventname = "Non-CV mortality (%)"
+)
+
+outall <- bind_rows(
+  anyhosp,
+  anyhosprep,
+  hfhosp,
+  hfhosprep,
+  cvhosp,
+  cvhosprep,
+  noncvhosp,
+  noncvhosprep,
+  anyvis,
+  anyvisrep,
+  em,
+  emnohosp,
+  acmort,
+  cvmort,
+  noncvmort
+)
+
+
+write.xlsx(outall, paste0("./output/tabs/incidence_efc_", Sys.Date(), ".xlsx"), rowNames = FALSE)
+
+footnote(mykable(outall,
+  fontsize = 6,
+  caption = "Outcomes by EF vs HF-free controls"
+) %>%
+  landscape() %>%
+  add_header_above(c(" " = 1, " " = 1, "HFrEF" = 2, "HFmrEF" = 2, "HFpEF" = 2)),
+general = c(
+  "Incidence =  no events, sum py, rate/1000py (95% CI)."
+)
+)
+```

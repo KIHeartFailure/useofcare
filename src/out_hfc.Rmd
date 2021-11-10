@@ -1,123 +1,115 @@
-```{r incidence, cache=cacheon}
-incfunc <- function(time, event, eventname, rep = FALSE) {
-  out <- data.frame(matrix(NA, ncol = 7, nrow = 1))
-
-  out[1, 1] <- eventname
-  colnames(out) <- c("Outcome", paste0(rep(levels(pdata$shf_ef_cat), each = 2), " ", rep(levels(pdata$casecontrol), 3)))
-
-  if (!rep) {
-    ev <- pdata %>%
-      group_by(shf_ef_cat, casecontrol) %>%
-      summarise(
-        ev = sum(!!sym(event) == "Yes"),
-        .groups = "drop"
-      )
-  }
-  if (rep) {
-    ev <- pdata %>%
-      group_by(shf_ef_cat, casecontrol) %>%
-      summarise(
-        ev = sum(!!sym(event)),
-        .groups = "drop"
-      )
-  }
-
-  s <- pdata %>%
-    group_by(shf_ef_cat, casecontrol) %>%
-    summarise(
-      s = sum(!!sym(time) / 365.25),
-      .groups = "drop"
-    )
-  r <- pois.exact(x = ev$ev, pt = s$s / 1000)
-
-  out[1, 2:7] <- paste0(
-    ev$ev, ", ",
-    dF(s$s, dig = 0), ", ",
-    dF(r$rate, dig = 0), " (",
-    dF(r$lower, dig = 0), "-",
-    dF(r$upper, dig = 0), ")"
-  )
-  return(out)
-}
+```{r incidencehfc, cache=cacheon, dependson="incfunc"}
 
 anyhosp <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_hospany",
   event = "sos_out_hospany",
   eventname = "First all-cause hospitalization"
 )
 anyhosprep <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_nohospany",
   eventname = "All-cause hospitalizations",
   rep = TRUE
 )
 hfhosp <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_hosphf",
   event = "sos_out_hosphf",
-  eventname = "First HF hospitalization"
+  eventname = "First HF hospitalization",
+  mod = FALSE
 )
 hfhosprep <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_nohosphf",
   eventname = "HF hospitalizations",
-  rep = TRUE
+  rep = TRUE,
+  mod = FALSE
 )
 cvhosp <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_hospcv",
   event = "sos_out_hospcv",
   eventname = "First CV hospitalization"
 )
 cvhosprep <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_nohospcv",
   eventname = "CV hospitalizations",
   rep = TRUE
 )
 noncvhosp <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_hospnoncv",
   event = "sos_out_hospnoncv",
   eventname = "First non-CV hospitalization"
 )
 noncvhosprep <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_nohospnoncv",
   eventname = "Non-CV hospitalizations",
   rep = TRUE
 )
 anyvis <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_visany",
   event = "sos_out_visany",
   eventname = "First all-cause visit"
 )
 anyvisrep <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_novisany",
   eventname = "All-cause visits",
   rep = TRUE
 )
 em <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_noem",
   eventname = "ER visits/hospitalizations",
   rep = TRUE
 )
 emnohosp <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_noemnohosp",
   eventname = "ER visits excluding trailing hospitalisation",
   rep = TRUE
 )
 acmort <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_death",
   eventname = "All-cause mortality (%)"
 )
 cvmort <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_deathcv",
   eventname = "CV mortality (%)"
 )
 noncvmort <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_deathnoncv",
   eventname = "Non-CV mortality (%)"
@@ -135,27 +127,20 @@ outall <- bind_rows(
   anyvis,
   anyvisrep,
   em,
-  emnohosp, 
+  emnohosp,
   acmort,
-  cvmort, 
+  cvmort,
   noncvmort
 )
 
 
-write.xlsx(outall, paste0("./output/tabs/incidence_", Sys.Date(), ".xlsx"), rowNames = FALSE)
-
-colnames(outall) <- sanitize_text(c("Outcome", rep(c("Case", "Control"), 3)))
-
-myHeader <- c(" " = 1, "HFrEF" = 2, "HFmrEF" = 2, "HFpEF" = 2)
-names(myHeader) <- c(" ", "HFrEF", "HFmrEF", "HFpEF")
-
+write.xlsx(outall, paste0("./output/tabs/incidence_hfc_", Sys.Date(), ".xlsx"), rowNames = FALSE)
 
 footnote(mykable(outall,
-  fontsize = 5.5,
-  caption = "Incidence"
+  fontsize = 6,
+  caption = "Outcomes HF vs HF-free controls"
 ) %>%
-  landscape() %>%
-  add_header_above(myHeader),
+  landscape(),
 general = c(
   "Incidence =  no events, sum py, rate/1000py (95% CI)."
 )

@@ -5,7 +5,7 @@ svpatreg <- patreg %>%
   filter(sos_source == "sv")
 
 svpatreg <- left_join(pdata %>%
-  select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, sos_outtime_death, sos_out_death, censdtm),
+  select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, ef_casecontrol, sos_outtime_death, sos_out_death, censdtm),
 svpatreg,
 by = "LopNr"
 ) %>%
@@ -16,7 +16,7 @@ ovpatreg <- patreg %>%
   filter(sos_source == "ov")
 
 ovpatreg <- left_join(pdata %>%
-  select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, sos_outtime_death, sos_out_death, censdtm),
+  select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, ef_casecontrol, sos_outtime_death, sos_out_death, censdtm),
 ovpatreg,
 by = "LopNr"
 ) %>%
@@ -27,11 +27,11 @@ create_recevents <- function(diakod, diakodneg = FALSE, sosdata = svpatreg) {
   tmpsos <- sosdata %>%
     mutate(sos_out = stringr::str_detect(HDIA, diakod, negate = diakodneg)) %>%
     filter(sos_out) %>%
-    select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, sos_outtime_death, sos_out_death, censdtm, sos_outtime, sos_out)
+    select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, ef_casecontrol, sos_outtime_death, sos_out_death, censdtm, sos_outtime, sos_out)
 
   dataout <- bind_rows(
     pdata %>%
-      select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, sos_outtime_death, sos_out_death, censdtm),
+      select(LopNr, shf_indexdtm, casecontrol, shf_ef_cat, ef_casecontrol, sos_outtime_death, sos_out_death, censdtm),
     tmpsos
   ) %>%
     mutate(

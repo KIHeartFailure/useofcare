@@ -105,7 +105,15 @@ Since the cases and controls are loosely matched dependency will not be incorpor
 
 ## Baseline characteristics
 
-```{r, child = "../src/tab1.Rmd"}
+```{r, child = "../src/tab1_hfc.Rmd"}
+
+```
+
+```{r, child = "../src/tab1_ef.Rmd"}
+
+```
+
+```{r, child = "../src/tab1_efc.Rmd"}
 
 ```
 
@@ -122,6 +130,10 @@ The mean cumulative function (MCF) was used to depict the recurrent events.
 
 Incidence per 1000 py was calculated with 95% Poisson confidence intervals. 
 
+Cox proportional hazards regressions were 
+used to model the time to first event. Recurrent events were model using a negative binomial generalized linear model 
+including the log of time as an offset in the model. In the presentation by EF vs HF-free controls 3 separate models where conducted, one within each EF group.  
+
 The median (q1-q3) follow-up is 
 `r pdata %>% summarise(med = dF(median(sos_outtime_death / 365.25), dig = 1),
                                              q1 = dF(quantile(sos_outtime_death / 365.25, 0.25), dig = 1),
@@ -132,13 +144,30 @@ The median (q1-q3) follow-up is
                                    pull(sumpy)` patient-years of follow-up.
 
 
-```{r, child = "../src/km.Rmd"}
+```{r, child = "../src/km_hfc.Rmd"}
 
 ```
 
-```{r, child = "../src/incidence.Rmd"}
+```{r, child = "../src/km_ef.Rmd"}
 
 ```
+
+```{r, child = "../src/km_efc.Rmd"}
+
+```
+
+```{r, child = "../src/out_hfc.Rmd"}
+
+```
+
+```{r, child = "../src/out_ef.Rmd"}
+
+```
+
+```{r, child = "../src/out_efc.Rmd"}
+
+```
+
 ```{r, child = "../src/los.Rmd"}
 
 ```

@@ -1,0 +1,103 @@
+```{r kmhosphcf, fig.cap="First all-cause hospitalization HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_hospany",
+  event = "sos_out_hospany_cr",
+  eventname = "First all-cause hospitalization (%)",
+  yposplus = c(0, 0) # "Case"    "Control"
+)
+```
+
+```{r kmrechosphcf, fig.cap="Recurrent all-cause hospitalization HF vs HF-free controls", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospany,
+  xvar = "casecontrol",
+  eventname = "Cumulative mean of all-cause hospitalizations"
+)
+```
+
+```{r kmcvhosphcf, fig.cap="First CV hospitalization HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_hospcv",
+  event = "sos_out_hospcv_cr",
+  eventname = "First CV hospitalization (%)"
+)
+```
+
+```{r kmreccvhosphcf, fig.cap="Recurrent CV hospitalization HF vs HF-free controls", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospcv,
+  xvar = "casecontrol",
+  eventname = "Cumulative mean of CV hospitalizations"
+)
+```
+
+```{r kmnoncvhosphcf, fig.cap="First non-CV hospitalization HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_hospnoncv",
+  event = "sos_out_hospnoncv_cr",
+  eventname = "First non-CV hospitalization (%)"
+)
+```
+
+```{r kmrecnoncvhosphcf, fig.cap="Recurrent non-CV hospitalization HF vs HF-free controls", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_hospnoncv,
+  xvar = "casecontrol",
+  eventname = "Cumulative mean of non-CV hospitalizations"
+)
+```
+
+```{r kmhfvishcf, fig.cap="First out-patient visit HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_visany",
+  event = "sos_out_visany_cr",
+  eventname = "First out-patient visit (%)"
+)
+```
+
+```{r kmrechfvishcf, fig.cap="Recurrent out-patient visit HF vs HF-free controls", cache=cacheon, dependson="mcffunc"}
+mcffunc(
+  data = pdata_rec_visany,
+  xvar = "casecontrol",
+  eventname = "Cumulative mean of out-patient visits"
+)
+```
+
+```{r kmacdeathhcf, fig.cap="All-cause mortality HF vs HF-free controls", cache=cacheon, dependson="kmfunc"}
+kmfunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_death",
+  eventname = "All-cause mortality (%)"
+)
+```
+
+```{r kmcvdeathhcf, fig.cap="CV mortality HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_deathcv_cr",
+  eventname = "CV mortality (%)"
+)
+```
+
+```{r kmnoncvdeathhcf, fig.cap="Non-CV mortality HF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_death",
+  event = "sos_out_deathnoncv_cr",
+  eventname = "Non-CV mortality (%)",
+  yposplus = c(0.01, 0)
+)
+```
