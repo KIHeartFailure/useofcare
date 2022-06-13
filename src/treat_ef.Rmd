@@ -1,0 +1,110 @@
+```{r treatfunc, cache=cacheon}
+treatfunc <- function(treat, ylab, ylim = c(0, 100), legpos = c(2005, 40)) {
+  treatdata <- pdata %>%
+    filter(casecontrol == "Case" & !is.na(!!sym(treat)))
+
+  treatdata <- treatdata %>%
+    group_by(shf_ef_cat, shf_indexyear) %>%
+    count(!!sym(treat)) %>%
+    mutate(p = n / sum(n) * 100) %>%
+    ungroup() %>%
+    filter(!!sym(treat) == "Yes")
+
+  mod <- summary(glm(formula(paste0(treat, "== 'Yes' ~ shf_indexyear")),
+    data = pdata %>% filter(shf_ef_cat == "HFrEF"), family = binomial(link = "log")
+  ))
+  orprintref <- paste0(
+    "HFrEF: ",
+    fn(exp(mod$coefficients[2, "Estimate"]), 2),
+    " (",
+    fn(exp(mod$coefficients[2, "Estimate"] - global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "-",
+    fn(exp(mod$coefficients[2, "Estimate"] + global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "), ",
+    fn(mod$coefficients[2, "Pr(>|z|)"], 3, p = TRUE)
+  )
+  mod <- summary(glm(formula(paste0(treat, "== 'Yes' ~ shf_indexyear")),
+    data = pdata %>% filter(shf_ef_cat == "HFmrEF"), family = binomial(link = "log")
+  ))
+  orprintmref <- paste0(
+    "HFmrEF: ",
+    fn(exp(mod$coefficients[2, "Estimate"]), 2),
+    " (",
+    fn(exp(mod$coefficients[2, "Estimate"] - global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "-",
+    fn(exp(mod$coefficients[2, "Estimate"] + global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "), ",
+    fn(mod$coefficients[2, "Pr(>|z|)"], 3, p = TRUE)
+  )
+  mod <- summary(glm(formula(paste0(treat, "== 'Yes' ~ shf_indexyear")),
+    data = pdata %>% filter(shf_ef_cat == "HFpEF"), family = binomial(link = "log")
+  ))
+  orprintpef <- paste0(
+    "HFpEF: ",
+    fn(exp(mod$coefficients[2, "Estimate"]), 2),
+    " (",
+    fn(exp(mod$coefficients[2, "Estimate"] - global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "-",
+    fn(exp(mod$coefficients[2, "Estimate"] + global_z05 * mod$coefficients[2, "Std. Error"]), 2),
+    "), ",
+    fn(mod$coefficients[2, "Pr(>|z|)"], 3, p = TRUE)
+  )
+
+  orprint <- c(orprintref, orprintmref, orprintpef)
+
+  cexmy <- 1
+
+  plot(treatdata %>% filter(shf_ef_cat == "HFrEF") %>% pull(shf_indexyear),
+    treatdata %>% filter(shf_ef_cat == "HFrEF") %>% pull(p),
+    type = "b", col = global_cols[7],
+    ylim = ylim, pch = 16, lwd = 3, ylab = paste0("Percent ", ylab, " use"),
+    xlab = "Year", axes = F, cex.lab = cexmy
+  )
+
+  axis(1, at = 2005:2018, cex = cexmy)
+  axis(2, las = 2, cex = cexmy)
+
+  matplot(treatdata %>% filter(shf_ef_cat == "HFmrEF") %>% pull(shf_indexyear),
+    treatdata %>% filter(shf_ef_cat == "HFmrEF") %>% pull(p),
+    type = "b", col = global_cols[5],
+    add = T, pch = 16, lwd = 3
+  )
+
+  matplot(treatdata %>% filter(shf_ef_cat == "HFpEF") %>% pull(shf_indexyear),
+    treatdata %>% filter(shf_ef_cat == "HFpEF") %>% pull(p),
+    type = "b", col = global_cols[2],
+    add = T, pch = 16, lwd = 3
+  )
+
+  legend(
+    x = legpos[1], y = legpos[2], orprint, cex = cexmy, col = global_cols[c(7, 5, 2)],
+    lwd = 3, bty = "n"
+  )
+  text(
+    x = legpos[1] + 4.1, y = legpos[2] + 3, "RR (95% CI), p-value",
+    cex = cexmy
+  )
+}
+```
+
+```{r treatrasi, fig.cap="RASi over time", cache=cacheon, dependson="treatfunc"}
+treatfunc(
+  treat = "ddr_rasiarni",
+  ylab = "RASi/ARNi"
+)
+```
+
+```{r treatbbl, fig.cap="Beta-blocker over time", cache=cacheon, dependson="treatfunc"}
+treatfunc(
+  treat = "ddr_bbl",
+  ylab = "Beta-blocker"
+)
+```
+
+```{r treatmra, fig.cap="MRA over time", cache=cacheon, dependson="treatfunc"}
+treatfunc(
+  treat = "ddr_mra",
+  ylab = "MRA", 
+  legpos = c(2005, 80)
+)
+```

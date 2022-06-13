@@ -4,8 +4,8 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_hospany",
   event = "sos_out_hospany_cr",
-  eventname = "First all-cause hospitalization (%)",
-  yposplus = c(-0.016, 0, 0, 0, 0.006, 0.003) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "First all-cause hospitalization (%)", 
+  legpos = c(5.5 * 365, .35)
 )
 ```
 
@@ -13,8 +13,7 @@ cifunc(
 mcffunc(
   data = pdata_rec_hospany,
   xvar = "ef_casecontrol",
-  eventname = "Cumulative mean of all-cause hospitalizations",
-  yposplus = c(0, -0.1, 0, 0, 0, 0.05) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "Cumulative mean of all-cause hospitalizations"
 )
 ```
 
@@ -24,8 +23,7 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_hospcv",
   event = "sos_out_hospcv_cr",
-  eventname = "First CV hospitalization (%)",
-  yposplus = c(0.02, -0.02, -0.015, 0, 0, 0.02) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "First CV hospitalization (%)"
 )
 ```
 
@@ -33,8 +31,7 @@ cifunc(
 mcffunc(
   data = pdata_rec_hospcv,
   xvar = "ef_casecontrol",
-  eventname = "Cumulative mean of CV hospitalizations",
-  yposplus = c(-0.05, -0.08, 0, 0, 0.05, 0.08) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "Cumulative mean of CV hospitalizations"
 )
 ```
 
@@ -44,8 +41,7 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_hospnoncv",
   event = "sos_out_hospnoncv_cr",
-  eventname = "First non-CV hospitalization (%)",
-  yposplus = c(0, -0.005, 0, 0, 0, 0.005) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "First non-CV hospitalization (%)"
 )
 ```
 
@@ -53,8 +49,7 @@ cifunc(
 mcffunc(
   data = pdata_rec_hospnoncv,
   xvar = "ef_casecontrol",
-  eventname = "Cumulative mean of non-CV hospitalizations",
-  yposplus = c(0, 0, 0, 0, 0, 0) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "Cumulative mean of non-CV hospitalizations"
 )
 ```
 
@@ -64,8 +59,8 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_visany",
   event = "sos_out_visany_cr",
-  eventname = "First out-patient visit (%)",
-  yposplus = c(0.025, -0.005, 0.05, -0.03, 0.012, -0.05) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "First out-patient visit (%)", 
+  legpos = c(5.5 * 365, .35)
 )
 ```
 
@@ -73,8 +68,17 @@ cifunc(
 mcffunc(
   data = pdata_rec_visany,
   xvar = "ef_casecontrol",
-  eventname = "Cumulative mean of out-patient visits",
-  yposplus = c(0, -0.75, 0, 1.5, 0, 0) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "Cumulative mean of out-patient visits"
+)
+```
+
+```{r kmrevascefc, fig.cap="First revascularization by EF vs HF-free controls", cache=cacheon, dependson="cifunc"}
+cifunc(
+  data = pdata,
+  xvar = "ef_casecontrol",
+  time = "sos_outtime_revasc",
+  event = "sos_out_revasc_cr",
+  eventname = "First revascularisation (%)"
 )
 ```
 
@@ -84,8 +88,7 @@ kmfunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_death",
-  eventname = "All-cause mortality (%)",
-  yposplus = c(-0.005, 0.0, 0.005, 0, 0, 0) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "All-cause mortality (%)"
 )
 ```
 
@@ -95,8 +98,7 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_deathcv_cr",
-  eventname = "CV mortality (%)",
-  yposplus = c(0, -0.01, -0.008, 0.008, 0.01, 0.01) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "CV mortality (%)"
 )
 ```
 
@@ -106,7 +108,6 @@ cifunc(
   xvar = "ef_casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_deathnoncv_cr",
-  eventname = "Non-CV mortality (%)",
-  yposplus = c(-0.02, -0.035, 0, -0.01, 0.03, 0.015) # case ref, control ref, case mref, control mref, case pef, control pef
+  eventname = "Non-CV mortality (%)"
 )
 ```

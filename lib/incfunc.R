@@ -1,7 +1,10 @@
 incfunc <- function(data, xvar, ref = "Control", time, event, eventname, rep = FALSE, mod = TRUE) {
   xlevs <- levels(data %>% pull(!!sym(xvar)))
 
-  out <- data.frame(matrix(NA, ncol = length(xlevs) + 2, nrow = 2))
+  nrow <- 1
+  if (mod) nrow <- nrow + 1
+  
+  out <- data.frame(matrix(NA, ncol = length(xlevs) + 2, nrow = nrow))
   colnames(out) <- c("Outcome", "Model", xlevs)
 
   out[1, 1] <- eventname
@@ -49,8 +52,11 @@ incfunc <- function(data, xvar, ref = "Control", time, event, eventname, rep = F
         out[2, 2] <- "Crude HR (95% CI), p-value"
 
         ## crude
-        mod <- summary(coxph(formula(paste0("Surv(", time, ",", event, "=='Yes') ~ relevel(", xvar, ", ref = '", ref, "')")),
-          data = data
+        mod <- summary(coxph(formula(paste0(
+          "Surv(", time, ",", event, "=='Yes') ~ relevel(",
+          xvar, ", ref = '", ref, "')"
+        )),
+        data = data
         ))
 
         out[2, ref] <- "ref"

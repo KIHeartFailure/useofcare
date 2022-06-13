@@ -1,136 +1,136 @@
-```{r incidenceef, cache=cacheon, dependson="incfunc"}
+```{r incidenceefiscemic, cache=cacheon, dependson="incfunc"}
 
 anyhosp <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_hospany",
   event = "sos_out_hospany",
   eventname = "First all-cause hospitalization"
 )
 anyhosprep <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_nohospany",
   eventname = "All-cause hospitalizations",
   rep = TRUE
 )
 hfhosp <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_hosphf",
   event = "sos_out_hosphf",
   eventname = "First HF hospitalization"
 )
 hfhosprep <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_nohosphf",
   eventname = "HF hospitalizations",
   rep = TRUE
 )
 cvhosp <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_hospcv",
   event = "sos_out_hospcv",
   eventname = "First CV hospitalization"
 )
 cvhosprep <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_nohospcv",
   eventname = "CV hospitalizations",
   rep = TRUE
 )
 noncvhosp <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_hospnoncv",
   event = "sos_out_hospnoncv",
   eventname = "First non-CV hospitalization"
 )
 noncvhosprep <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_nohospnoncv",
   eventname = "Non-CV hospitalizations",
   rep = TRUE
 )
 anyvis <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_visany",
   event = "sos_out_visany",
   eventname = "First out-patient visit"
 )
 anyvisrep <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_novisany",
   eventname = "Out-patient visits",
   rep = TRUE
 )
 em <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_noem",
   eventname = "ER visits/hospitalizations",
   rep = TRUE
 )
 emnohosp <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_noemnohosp",
   eventname = "ER visits excluding trailing hospitalisation",
   rep = TRUE
 )
 revasc <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_revasc",
   event = "sos_out_revasc",
   eventname = "First revascularisation"
 )
 acmort <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_death",
   eventname = "All-cause mortality"
 )
 cvmort <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_deathcv",
   eventname = "CV mortality"
 )
 noncvmort <- incfunc(
-  data = pdata %>% filter(casecontrol == "Case"),
-  xvar = "shf_ef_cat",
-  ref = "HFrEF",
+  data = pdata %>% filter(casecontrol == "Case" & !is.na(ef_ischemic)),
+  xvar = "ef_ischemic",
+  ref = "HFrEF Ischemic",
   time = "sos_outtime_death",
   event = "sos_out_deathnoncv",
   eventname = "Non-CV mortality"
@@ -156,15 +156,16 @@ outall <- bind_rows(
 )
 
 
-write.xlsx(outall, paste0("./output/tabs/incidence_ef_", Sys.Date(), ".xlsx"), rowNames = FALSE)
+write.xlsx(outall, paste0("./output/tabs/incidence_ef_ischemic_", Sys.Date(), ".xlsx"), rowNames = FALSE)
 
 footnote(mykable(outall,
-  fontsize = 6,
-  caption = "Outcomes by EF"
+  fontsize = 3,
+  caption = "Outcomes by EF and primary etiology"
 ) %>%
   landscape(),
 general = c(
-  "Incidence =  no events, sum py, rate/1000py (95% CI)."
+  "Incidence =  no events, sum py, rate/1000py (95% CI).",
+  "Primary etiology is not available in the registry prior to 2010-04-08"
 )
 )
 ```

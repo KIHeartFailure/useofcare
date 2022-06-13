@@ -1,25 +1,34 @@
-kmfunc <- function(data, xvar, time, event, eventname, yposplus = NULL) {
+kmfunc <- function(data, xvar, time, event, eventname, legpos = c(50, 1)) {
   fit <- survfit(formula(paste0("Surv(", time, ",", event, "=='Yes') ~ ", xvar)),
     data = data
   )
 
-  ytext <- levels(data %>% pull(!!sym(xvar)))
+  sfit <- summary(fit)$table
 
-  if (length(ytext) == 2) {
-    mycols <- rep(global_kicols[1], 2)
+  medsurv <- paste0(
+    dF(sfit[, "median"] / 365.25, 1)
+  )
+  medsurv <- str_replace_all(medsurv, "NA", "")
+  medsurv[medsurv != ""] <- paste0(" median: ", medsurv[medsurv != ""], " years")
+
+  ytext <- paste0(levels(data %>% pull(!!sym(xvar))), medsurv)
+
+  nlevs <- length(ytext)
+  if (nlevs == 2) {
+    mycols <- rep(global_cols[5], 5)
     mylty <- c(1, 2)
   }
-  if (length(ytext) == 3) {
-    mycols <- global_kicols[c(1, 2, 3)]
+  if (nlevs == 3) {
+    mycols <- global_cols[c(7, 5, 2)]
     mylty <- rep(1, 3)
   }
-  if (length(ytext) == 6) {
-    mycols <- rep(global_kicols[c(1, 2, 3)], each = 2)
+  if (nlevs == 6) {
+    mycols <- rep(global_cols[c(7, 5, 2)], each = 2)
     mylty <- c(1, 2, 1, 2, 1, 2)
   }
 
   # c(bottom, left, top, right)
-  par(mar = c(5, 4, 4, 7) + 0.1)
+  par(mar = c(4, 4, .5, .5) + 0.1)
   plots <- plot(fit,
     fun = "event",
     ylab = eventname,
@@ -40,23 +49,18 @@ kmfunc <- function(data, xvar, time, event, eventname, yposplus = NULL) {
   axis(2, seq(0, 1, 0.25), seq(0, 100, 25), las = 2)
   axis(1, at = seq(0, 10, 2) * 365, seq(0, 10, 2))
 
-  ypos <- 1 - summary(fit, 365 * 10, extend = TRUE)$surv
+  legend(x = legpos[1], y = legpos[2], ytext, col = mycols, lty = mylty, lwd = 3, bty = "n")
 
-  ytext <- levels(data %>% pull(!!sym(xvar)))
-
-  if (is.null(yposplus)) yposplus <- rep(0, length(ytext))
-  ylabs <- bind_cols(ypos = ypos + yposplus, ytext = ytext)
-
-  mtext(
-    side = 4,
-    line = .2,
-    at = ylabs$ypos,
-    ylabs$ytext,
-    las = 1
+  medsurv <- sfit[, "median"]
+  medsurv[medsurv >= 10 * 365] <- NA
+  segments(
+    x0 = medsurv, y0 = rep(0, nlevs), y1 = rep(0.5, nlevs),
+    lty = mylty, lwd = 3, col = mycols
   )
+  abline(h = 0.5, col = 1, lty = 3)
 }
 
-cifunc <- function(data, xvar, time, event, eventname, yposplus = NULL) {
+cifunc <- function(data, xvar, time, event, eventname, legpos = c(50, 1)) {
   fit <- cuminc(
     ftime = data %>% pull(!!sym(time)),
     fstatus = data %>% pull(!!sym(event)),
@@ -64,26 +68,42 @@ cifunc <- function(data, xvar, time, event, eventname, yposplus = NULL) {
     group = data %>% pull(!!sym(xvar))
   )
 
-  ytext <- levels(data %>% pull(!!sym(xvar)))
+  levs <- levels(data %>% pull(!!sym(xvar)))
+  nlevs <- length(levs)
+  medsurv <- rep(NA, nlevs)
+  for (i in seq_along(levs)) {
+    ytmp <- fit[[i]]$est
 
-  if (length(ytext) == 2) {
-    mycols <- rep(global_kicols[1], 2)
+    if (any(ytmp >= 0.5)) {
+      xtmp <- fit[[i]]$time
+      x <- max(xtmp[ytmp <= 0.5])
+      medsurv[i] <- x
+    }
+  }
+
+  medsurvprint <- medsurv
+  medsurvprint[!is.na(medsurv)] <- paste0(" median: ", dF(medsurv / 365.25, 1)[!is.na(medsurv)], " years")
+  medsurvprint[is.na(medsurv)] <- ""
+  ytext <- paste0(levs, medsurvprint)
+
+  if (nlevs == 2) {
+    mycols <- rep(global_cols[5], 2)
     mylty <- c(1, 2)
     fitsn <- 1:2
   }
-  if (length(ytext) == 3) {
-    mycols <- global_kicols[c(1, 2, 3)]
+  if (nlevs == 3) {
+    mycols <- global_cols[c(7, 5, 2)]
     mylty <- rep(1, 3)
     fitsn <- 1:3
   }
-  if (length(ytext) == 6) {
-    mycols <- rep(global_kicols[c(1, 2, 3)], each = 2)
+  if (nlevs == 6) {
+    mycols <- rep(global_cols[c(7, 5, 2)], each = 2)
     mylty <- c(1, 2, 1, 2, 1, 2)
     fitsn <- 1:6
   }
 
   # c(bottom, left, top, right)
-  par(mar = c(5, 4, 4, 7) + 0.1)
+  par(mar = c(4, 4, .5, .5) + 0.1)
 
   plot(fit[fitsn],
     ylab = eventname,
@@ -101,24 +121,17 @@ cifunc <- function(data, xvar, time, event, eventname, yposplus = NULL) {
   axis(2, seq(0, 1, 0.25), seq(0, 100, 25), las = 2)
   axis(1, at = seq(0, 10, 2) * 365, seq(0, 10, 2))
 
-  ypos <- timepoints(fit[fitsn], 365 * 10)$est
+  legend(x = legpos[1], y = legpos[2], ytext, col = mycols, lty = mylty, lwd = 3, bty = "n")
 
-  ytext <- levels(pdata %>% pull(!!sym(xvar)))
-
-  if (is.null(yposplus)) yposplus <- rep(0, length(ytext))
-
-  ylabs <- bind_cols(ypos = ypos + yposplus, ytext = ytext)
-
-  mtext(
-    side = 4,
-    line = .2,
-    at = ylabs$ypos,
-    ylabs$ytext,
-    las = 1
+  medsurv[medsurv >= 10 * 365] <- NA
+  segments(
+    x0 = medsurv, y0 = rep(0, nlevs), y1 = rep(0.5, nlevs),
+    lty = mylty, lwd = 3, col = mycols
   )
+  abline(h = 0.5, col = 1, lty = 3)
 }
 
-mcffunc <- function(data, xvar, eventname, yposplus = NULL, ymax = NULL) {
+mcffunc <- function(data, xvar, eventname, legpos = NULL, ymax = NULL) {
   fits <- mcf(formula(paste0("Recur(sos_outtime, LopNcasecontrol, sos_out) ~ ", xvar)), data = data)
 
   if (is.null(ymax)) {
@@ -128,22 +141,20 @@ mcffunc <- function(data, xvar, eventname, yposplus = NULL, ymax = NULL) {
   ytext <- levels(data %>% pull(!!sym(xvar)))
 
   if (length(ytext) == 2) {
-    mycols <- rep(global_kicols[1], 2)
+    mycols <- rep(global_cols[5], 2)
     mylty <- c(1, 2)
   }
   if (length(ytext) == 3) {
-    mycols <- global_kicols[c(1, 2, 3)]
+    mycols <- global_cols[c(7, 5, 2)]
     mylty <- rep(1, 3)
   }
   if (length(ytext) == 6) {
-    mycols <- rep(global_kicols[c(1, 2, 3)], each = 2)
+    mycols <- rep(global_cols[c(7, 5, 2)], each = 2)
     mylty <- c(1, 2, 1, 2, 1, 2)
   }
 
-  ypos <- rep(NA, length(ytext))
-
   # c(bottom, left, top, right)
-  par(mar = c(5, 4, 4, 7) + 0.1)
+  par(mar = c(4, 4, .5, .5) + 0.1)
 
   plot(fits@MCF$time[fits@MCF[xvar] == ytext[1]],
     fits@MCF$MCF[fits@MCF[xvar] == ytext[1]],
@@ -159,8 +170,6 @@ mcffunc <- function(data, xvar, eventname, yposplus = NULL, ymax = NULL) {
     xaxs = "i", yaxs = "i"
   )
 
-  ypos[1] <- last(fits@MCF$MCF[fits@MCF$time <= 365 * 10 & fits@MCF[xvar] == ytext[1]])
-
   for (i in 2:length(ytext)) {
     lines(fits@MCF$time[fits@MCF[xvar] == ytext[i]],
       fits@MCF$MCF[fits@MCF[xvar] == ytext[i]],
@@ -168,20 +177,12 @@ mcffunc <- function(data, xvar, eventname, yposplus = NULL, ymax = NULL) {
       lwd = 3,
       lty = mylty[i]
     )
-    ypos[i] <- last(fits@MCF$MCF[fits@MCF$time <= 365 * 10 & fits@MCF[xvar] == ytext[i]])
   }
 
   axis(2, seq(0, ymax, 1), seq(0, ymax, 1), las = 2)
   axis(1, at = seq(0, 10, 1) * 365, seq(0, 10, 1))
 
-  if (is.null(yposplus)) yposplus <- rep(0, length(ytext))
-  ylabs <- bind_cols(ypos = ypos + yposplus, ytext = ytext)
+  if (is.null(legpos)) legpos <- c(50, ymax)
 
-  mtext(
-    side = 4,
-    line = .2,
-    at = ylabs$ypos,
-    ylabs$ytext,
-    las = 1
-  )
+  legend(x = legpos[1], y = legpos[2], ytext, col = mycols, lty = mylty, lwd = 3, bty = "n")
 }

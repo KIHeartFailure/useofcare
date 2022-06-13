@@ -67,14 +67,14 @@ anyvis <- incfunc(
   xvar = "casecontrol",
   time = "sos_outtime_visany",
   event = "sos_out_visany",
-  eventname = "First all-cause visit"
+  eventname = "First out-patient visit"
 )
 anyvisrep <- incfunc(
   data = pdata,
   xvar = "casecontrol",
   time = "sos_outtime_death",
   event = "sos_out_novisany",
-  eventname = "All-cause visits",
+  eventname = "Out-patient visits",
   rep = TRUE
 )
 em <- incfunc(
@@ -92,6 +92,13 @@ emnohosp <- incfunc(
   event = "sos_out_noemnohosp",
   eventname = "ER visits excluding trailing hospitalisation",
   rep = TRUE
+)
+revasc <- incfunc(
+  data = pdata,
+  xvar = "casecontrol",
+  time = "sos_outtime_revasc",
+  event = "sos_out_revasc",
+  eventname = "First revascularisation"
 )
 acmort <- incfunc(
   data = pdata,
@@ -128,6 +135,7 @@ outall <- bind_rows(
   anyvisrep,
   em,
   emnohosp,
+  revasc,
   acmort,
   cvmort,
   noncvmort

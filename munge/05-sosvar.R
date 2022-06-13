@@ -91,7 +91,7 @@ pdata <- create_sosvar(
   diakod = " ",
   censdate = censdtm,
   valsclass = "num",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (in)"
 )
 
@@ -108,7 +108,7 @@ pdata <- create_sosvar(
   diakod = " I110| I130| I132| I255| I420| I423| I425| I426| I427| I428| I429| I43| I50| J81| K761| R57",
   censdate = censdtm,
   valsclass = "num",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (in)"
 )
 
@@ -125,7 +125,7 @@ pdata <- create_sosvar(
   diakod = " I| J81| K761| G45| R57",
   censdate = censdtm,
   valsclass = "num",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (in)"
 )
 
@@ -143,7 +143,7 @@ pdata <- create_sosvar(
   diakodneg = TRUE,
   censdate = censdtm,
   valsclass = "num",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (in)"
 )
 
@@ -159,7 +159,7 @@ pdata <- create_sosvar(
   diakod = " ",
   censdate = censdtm,
   valsclass = "fac",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (out)"
 )
 
@@ -176,8 +176,24 @@ pdata <- create_sosvar(
   diakod = " ",
   censdate = censdtm,
   valsclass = "num",
-  warnings = FALSE, 
+  warnings = FALSE,
   meta_reg = "NPR (out)"
+)
+
+pdata <- create_sosvar(
+  sosdata = patreg,
+  cohortdata = pdata,
+  patid = LopNr,
+  indexdate = shf_indexdtm,
+  sosdate = INDATUM,
+  opvar = OP_all,
+  type = "out",
+  name = "revasc",
+  opkod = " FNG| FNA| FNB| FNC| FND| FNE| FNF| FNH",
+  censdate = censdtm,
+  valsclass = "fac",
+  warnings = FALSE,
+  meta_reg = "NPR"
 )
 
 metaout <- metaout %>%

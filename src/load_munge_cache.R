@@ -15,7 +15,6 @@ ProjectTemplate::reload.project(
 ProjectTemplate::cache("tabvars")
 
 ProjectTemplate::cache("flow")
-ProjectTemplate::cache("ncontrols")
 
 ProjectTemplate::cache("metaout")
 ProjectTemplate::cache("metalm")

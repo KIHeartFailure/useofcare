@@ -4,6 +4,13 @@
 
 pdata <- pdata %>%
   mutate(
+    shf_primaryetiology_cat = factor(case_when(
+      is.na(shf_primaryetiology) ~ NA_real_,
+      shf_primaryetiology %in% c("IHD") ~ 1,
+      TRUE ~ 2
+    ),
+    levels = 1:2, labels = c("Ischemic", "Non-ischemic")
+    ),
     shf_indexyear_cat = case_when(
       shf_indexyear <= 2010 ~ "2005-2010",
       shf_indexyear <= 2015 ~ "2011-2015",
@@ -96,9 +103,14 @@ pdata <- pdata %>%
     sos_out_visany_cr = create_crevent(sos_out_visany, sos_out_death),
     sos_out_deathcv_cr = create_crevent(sos_out_deathcv, sos_out_death),
     sos_out_deathnoncv_cr = create_crevent(sos_out_deathnoncv, sos_out_death),
+    sos_out_revasc_cr = create_crevent(sos_out_revasc, sos_out_death),
 
     ef_casecontrol = factor(paste0(as.numeric(shf_ef_cat) * 2 + as.numeric(casecontrol) - 2),
       labels = c(paste0(rep(levels(shf_ef_cat), each = 2), " ", levels(casecontrol)))
+    ),
+    ef_ischemic = factor(paste0(as.numeric(shf_ef_cat) * 2 + as.numeric(shf_primaryetiology_cat) - 2),
+      levels = 1:6,
+      labels = c(paste0(rep(levels(shf_ef_cat), each = 2), " ", levels(shf_primaryetiology_cat)))
     )
   )
 

@@ -7,7 +7,7 @@ output:
   pdf_document:
     fig_caption: yes
     fig_height: 7
-    fig_width: 7
+    fig_width: 8
     number_sections: yes
 link-citations: yes
 bibliography: references.bib
@@ -164,11 +164,27 @@ The median (q1-q3) follow-up is
 
 ```
 
+```{r, child = "../src/out_efischemic.Rmd"}
+
+```
+
 ```{r, child = "../src/out_efc.Rmd"}
 
 ```
 
 ```{r, child = "../src/los.Rmd"}
+
+```
+
+\clearpage
+\newpage
+
+## Treatments
+
+Treatments over time were presented graphically by EF. The crude RR was estimated using a 
+Generalized Linear Model with a binomial distribution and a log link [@gee]. 
+
+```{r, child = "../src/treat_ef.Rmd"}
 
 ```
 
