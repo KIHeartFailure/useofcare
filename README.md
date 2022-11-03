@@ -31,4 +31,4 @@ reports/Statistical_report_XX.Rmd
 
 ## Publication
 
-... 
+https://www.ahajournals.org/doi/full/10.1161/JAHA.122.026708
